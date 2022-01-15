@@ -58,12 +58,18 @@ insert into trozos_materiales values(1, 1);
 
 -- 1.  Realizar una consulta que permita conocer en que zapatos fue usado determinado molde.
 
-select id_diseño as Tipo_zapato, id_molde as molde from  rango_talla rt 
-inner join rango_talla on diseño.id = rango_talla.id_diseño 
-inner join rango_talla on molde.id = rango_talla.id_molde;
+select rt.id_diseño as Zapato, id_molde as Molde_utilizado from rango_talla rt 
 
 -- 2.  Realizar una consulta que permita conocer que lotes de material fueron usados en la construcción de un zapato.
 
+select tm.id_diseño as Zapato,
+tm.id_material as material_Usado,
+m.id_lote as lote
+from trozos_materiales tm 
+right join material m on tm.id_material = m.id 
+
 
 -- 3. Realizar un consulta que permita conocer cuanto zapatos se crearon para un diseño determinado
+
+select d.id as Zapato, d.num_zapatos as Cantidad_creada from diseño d 
 
