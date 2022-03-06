@@ -1,0 +1,254 @@
+URL:
+mongodb+srv://cluster0.lsi0l.mongodb.net/Taller2?retryWrites=true&w=majority
+User:
+jcerinza1
+Password:
+asdasd123
+
+{
+_id: "",
+nombre: "",
+descripcion: "",
+precio: "",
+info: {
+    imagen: "",
+    dimensiones: "",
+    categoria: "",
+    fecha_publicacion: "",
+    stock: "",
+    disponibilidad: "",
+    descuentos_mayor: "",
+    manual: "",
+    video: ""
+}
+}
+
+{
+_id: '';
+nombre: '';
+documento: ,
+residencia: {
+    departamento: "",
+    ciudad: "",
+    direccion: ""
+},
+correo: "",
+telefono: ,
+redes: []
+}
+
+{
+vendedor: ,
+productos: []
+}
+
+{
+calificacion: ,
+comentario: "",
+fecha: new Date(),
+anonimo: ,
+usuario: ,
+producto:
+}
+
+{
+pregunta: "",
+fecha: new Date(),
+anonimo: ,
+comprador: ,
+hilo: [{
+respuesta: "",
+fecha: new Date(),
+autor:
+}]
+}
+
+/*
+a) Si es posible responder a las consultas mas frecuentes
+La estructura del producto contiene aquello descrito en las consultas,
+la agrupacion de productos se puede hacer facilmente accediendo al documento
+interno de cada producto conteniendo esa informacion, todo es cuestion de
+escribir bien las consultas
+*/
+
+/*
+b) En productos se agrupa la informacion en un documento aparte para
+encapsular la informacion y separarla como opcional, se usa solamente un modelo para
+compradores y vendedores, con la diferencia de un modelo intermedio que cumple
+una relacion 1 a muchos para vincular los productos al usuario vendedor
+Los modelos de las preguntas contienen el hilo de respuestas y su respectivo autor
+
+c) Hay un poco de dificultad en escribir las consultas y manejar ciertos aspectos de la
+logica, es necesario usar varios condicionales con tal de no hacer diferentes modelos por caso,
+como crear un modelo de respuesta de hilo para vendedor y otro para comprador anonimo y no anonimo
+
+d) Todas las consultas son perfectamente posibles, pero no sencillas
+
+e) Seria util generar indices para precio, fecha, valoracion y categoria. Para vendedor, productos y
+ubicacion
+
+f) En primera instancia, que se llenen los datos obligatorios, para las fechas debe haber valores validos
+como para la fecha de publicacion de las respuestas, deben ir en orden cronologico. Para que los valores
+tengan sentido y se pueda hacer las consultas
+
+*/
+
+db.createCollection("Productos");
+db.createCollection("Usuarios");
+db.createCollection("Valoraciones");
+db.createCollection("Preguntas");
+
+db.Productos.insertOne({
+_id: 1,
+nombre: "MSI RTX 3060",
+descripcion: "8 GB VRAM",
+precio: 3500000,
+info: {
+    imagen: "rtx3060.jpg",
+    dimensiones: "30x60x20",
+    categoria: "Gaming",
+    fecha_publicacion: new Date(),
+    stock: 100,
+    disponibilidad: 1,
+    descuentos_mayor: 0.1,
+    manual: "manualRTX.pdf",
+    video: "videoRTX.mp4"
+}
+});
+
+db.Usuarios.insertOne({
+_id: 1,
+nombre: "Juanito",
+documento: 1234123789,
+residencia: {
+    departamento: "Santander",
+    ciudad: "Bucaramanga",
+    direccion: "Gratamira"
+},
+correo: "juanito123@gmail.com",
+telefono: 3122347654,
+redes: ["@juanitotech"]
+});
+
+db.Usuarios.insertOne({
+vendedor: 1,
+productos: [1]
+});
+
+db.Valoraciones.insertOne({
+calificacion: 5,
+comentario: "Increible, me corre todos los juegos",
+fecha: new Date(),
+anonimo: 0,
+usuario: 2,
+producto: 1
+});
+
+db.Preguntas.insertOne({
+pregunta: "Corre Elden Ring?",
+fecha: new Date(),
+anonimo: 1,
+comprador: 3,
+hilo: [{
+respuesta: "Si lo corre",
+fecha: new Date(),
+autor: 1
+}]
+});
+
+//b)
+
+db.Productos.insertMany([{
+_id: 2,
+nombre: "MSI RTX 2060",
+descripcion: "6 GB VRAM",
+precio: 2800000,
+info: {
+    imagen: "rtx2060.jpg",
+    dimensiones: "30x60x20",
+    categoria: "Gaming",
+    fecha_publicacion: new Date(),
+    stock: 100,
+    disponibilidad: 1,
+    descuentos_mayor: 0.1,
+    manual: "manualRTX2.pdf",
+    video: "videoRTX2.mp4"
+}
+},
+{
+_id: 3,
+nombre: "Ryzen 7 5990X",
+descripcion: "64 Cores 128 Threads 3.0 GHz",
+precio: 4500000,
+info: {
+    imagen: "r55990x.jpg",
+    dimensiones: "20x20x50",
+    categoria: "Gaming",
+    fecha_publicacion: new Date(),
+    stock: 100,
+    disponibilidad: 1,
+    descuentos_mayor: 0.05,
+    manual: "manualR5X.pdf",
+    video: "videoR5X.mp4"
+}
+},
+{
+_id: 4,
+nombre: "Camiseta Elden Ring",
+descripcion: "Camiseta promocional original",
+precio: 120000,
+info: {
+    imagen: "camER.jpg",
+    dimensiones: "Depende de la talla",
+    categoria: "Ropa",
+    fecha_publicacion: new Date(),
+    stock: 120,
+    disponibilidad: 1,
+    descuentos_mayor: 0.15,
+    manual: "",
+    video: "trailerEldenRing.mp4"
+}
+}]);
+
+db.Usuarios.insertMany([
+{
+_id: 2,
+nombre: "Pepito",
+documento: 123454321,
+residencia: {
+    departamento: "Santander",
+    ciudad: "Bucaramanga",
+    direccion: "Cabecera"
+},
+correo: "pepitoxd@gmail.com",
+telefono: 3111233211,
+redes: []
+},
+{
+_id: 3,
+nombre: "Andres",
+documento: 1111111234,
+residencia: {
+    departamento: "Santander",
+    ciudad: "Bucaramanga",
+    direccion: "El Reposo"
+},
+correo: "andres391@gmail.com",
+telefono: 31526314315,
+redes: ["@andres391"]
+},
+{
+_id: 4,
+nombre: "William",
+documento: 98761234,
+residencia: {
+    departamento: "Santander",
+    ciudad: "Bucaramanga",
+    direccion: "San Francisco"
+},
+correo: "willliamuwu@gmail.com",
+telefono: 3189874561,
+redes: ["@willuwu"]
+},
+
+]);
